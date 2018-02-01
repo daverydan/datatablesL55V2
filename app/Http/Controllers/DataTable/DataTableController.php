@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\DataTable;
 
-use Exception;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 abstract class DataTableController extends Controller
 {
@@ -17,16 +18,39 @@ abstract class DataTableController extends Controller
 	{
 		$builder = $this->builder();
 
-		// dd($builder);
-		// dd(get_class($builder));
 		// Check if instance of Builder
 		if (!$builder instanceof Builder) {
 			throw new Exception('Entity builder not instance of Builder');
 		}
+
+		$this->builder = $builder;
 	}
 
 	public function index()
 	{
-		// 
+		return response()->json([
+			'data' => [
+				// 'displayable' => $this->getDisplayableColumns(),
+				'displayable' => array_values($this->getDisplayableColumns()),
+				'records' => $this->getRecords(),
+			]
+		]);
+	}
+
+	public function getDisplayableColumns()
+	{
+		// remove hidden table columns from display
+		// array_diff - Returns an array containing all the entries from array1 that are not present in any of the other arrays.
+		return array_diff($this->getDatabaseColumnNames(), $this->builder->getModel()->getHidden());
+	}
+
+	protected function getDatabaseColumnNames()
+	{ // return all the column names ( returns the `users` table )
+		return Schema::getColumnListing($this->builder->getModel()->getTable());
+	}
+
+	protected function getRecords()
+	{
+		return $this->builder->get($this->getDisplayableColumns());
 	}
 }
