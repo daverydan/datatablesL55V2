@@ -28,9 +28,10 @@ abstract class DataTableController extends Controller
 
 	public function index()
 	{
+		// return view('admin.users.index');
 		return response()->json([
 			'data' => [
-				// 'displayable' => $this->getDisplayableColumns(),
+				'table' => $this->builder->getModel()->getTable(), // string: table name
 				'displayable' => array_values($this->getDisplayableColumns()),
 				'records' => $this->getRecords(),
 			]
