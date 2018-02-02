@@ -3,6 +3,17 @@
       <div class="panel-heading">{{ response.table }}</div>
 
       <div class="panel-body">
+				<div class="row">
+					<div class="form-group col-md-10">
+						<label for="filter">Quick search current results</label>
+						<input type="text" id="filter" class="form-control" v-model="quickSearchQuery">
+					</div>
+
+					<div class="form-group col-md-2">
+						{{ quickSearchQuery }}
+					</div>
+				</div>
+
       	<!-- {{ response.records }} -->
         <div class="table-responsive">
         	<table class="table table-striped">
@@ -49,7 +60,8 @@
     			sort: {
     				key: 'id', // column name default
     				order: 'asc'
-    			}
+    			},
+    			quickSearchQuery: ''
     		}
     	},
       
@@ -57,10 +69,22 @@
 				filteredRecords () {
 					let data = this.response.records
 
+					// foreach row 
+					data = data.filter((row) => {
+						// Object.keys = id, name, email, created_at
+						// console.log(Object.keys(row))
+						return Object.keys(row).some((key) => {
+							// console.log(String(row[key]));
+							// position greater than 0
+							return String(row[key]).toLowerCase().indexOf(this.quickSearchQuery.toLowerCase()) > -1
+						})
+					})
+
 					if (this.sort.key) {
 						data = _.orderBy(data, (i) => {
 							let value = i[this.sort.key] // order by column clicked
 							// console.log(value) // outputs all the ids
+
 							// parse the integers (ids)
 							if (!isNaN(parseFloat(value))) {
 								return parseFloat(value)
