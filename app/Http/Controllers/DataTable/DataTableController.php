@@ -33,6 +33,7 @@ abstract class DataTableController extends Controller
 			'data' => [
 				'table' => $this->builder->getModel()->getTable(), // string: table name
 				'displayable' => array_values($this->getDisplayableColumns()),
+				'updatable' => array_values($this->getUpdatableColumns()),
 				'records' => $this->getRecords($request),
 			]
 		]);
@@ -43,6 +44,11 @@ abstract class DataTableController extends Controller
 		// remove hidden table columns from display
 		// array_diff - Returns an array containing all the entries from array1 that are not present in any of the other arrays.
 		return array_diff($this->getDatabaseColumnNames(), $this->builder->getModel()->getHidden());
+	}
+
+	public function getUpdatableColumns()
+	{ // can override in sub/derived/child class
+		return $this->getDisplayableColumns();
 	}
 
 	protected function getDatabaseColumnNames()

@@ -38,11 +38,27 @@
         		</thead>
         	
         		<tbody>
+        			<!-- {{ editing.form }} -->
         			<!-- <tr v-for="record in response.records"> -->
         			<tr v-for="record in filteredRecords">
 <!-- column = property : columnValue = value (property: value / column: value) -->
-        				<td v-for="columnValue, column in record">{{ columnValue }}</td>
-        				<td>Edit</td>
+        				<td v-for="columnValue, column in record">
+        					<template v-if="editing.id === record.id && isUpdatable(column)">
+        						<div class="form-group">
+        							<input type="text" class="form-control" value="columnValue" v-model="editing.form[column]">
+        						</div>
+        					</template>
+        					<template v-else>
+        						{{ columnValue }}
+        					</template>
+        				</td>
+        				<td>
+        					<a href="#" @click.prevent="edit(record)" v-if="editing.id !== record.id">Edit</a>
+        					<template v-if="editing.id === record.id">
+        						<a href="#" @click.prevent="update">Save</a> <br>
+        						<a href="#" @click.prevent="editing.id = null">Cancel</a>
+        					</template>
+        				</td>
         			</tr>
         		</tbody>
         	</table>
@@ -68,7 +84,12 @@
     				order: 'asc'
     			},
     			limit: 50,
-    			quickSearchQuery: ''
+    			quickSearchQuery: '',
+    			editing: {
+    				id: null,
+    				form: {},
+    				errors: []
+    			}
     		}
     	},
       
@@ -124,6 +145,20 @@
       		this.sort.key = column
       		this.sort.order = this.sort.order === 'asc' ? 'desc' : 'asc'
       		// console.log(this.sort)
+      	},
+      	edit (record) {
+      		this.editing.errors = [] // clear out errors
+      		this.editing.id = record.id
+      		// pick out editable columns w/ Lodash
+      		// console.log(_.pick(record, this.response.updatable));
+      		this.editing.form = _.pick(record, this.response.updatable)
+      	},
+      	isUpdatable (column) {
+      		// only show on updatable fields
+      		return this.response.updatable.includes(column)
+      	},
+      	update () {
+      		console.log(this.editing.form)
       	}
       },
 

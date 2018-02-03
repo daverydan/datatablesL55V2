@@ -23,4 +23,13 @@ class UserController extends DataTableController
 			'id', 'name', 'email', 'created_at'
 		];
 	}
+
+	// override getUpdatableColumns() in DataTableController
+	public function getUpdatableColumns()
+	{
+		// how does this override getDisplayableColumns()???
+		return [
+			'name', 'email', 'created_at'
+		];
+	}
 }
