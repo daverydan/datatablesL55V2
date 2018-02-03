@@ -43445,6 +43445,33 @@ module.exports = function normalizeComponent (
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_query_string__ = __webpack_require__(46);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_query_string__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -43540,6 +43567,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         id: null,
         form: {},
         errors: []
+      },
+      search: {
+        value: '',
+        operator: 'equals',
+        column: 'id'
       }
     };
   },
@@ -43592,9 +43624,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       });
     },
     getQueryParameters: function getQueryParameters() {
-      return __WEBPACK_IMPORTED_MODULE_0_query_string___default.a.stringify({
+      return __WEBPACK_IMPORTED_MODULE_0_query_string___default.a.stringify(_extends({
         limit: this.limit
-      });
+      }, this.search));
     },
     sortBy: function sortBy(column) {
       // console.log(column)
@@ -44076,6 +44108,130 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "panel-body" }, [
+      _c(
+        "form",
+        {
+          attrs: { action: "#" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              _vm.getRecords($event)
+            }
+          }
+        },
+        [
+          _c("label", { attrs: { for: "saerch" } }, [_vm._v("Search")]),
+          _vm._v("\n\t\t\t\t\t" + _vm._s(_vm.search) + "\n\t\t\t\t\t"),
+          _c("div", { staticClass: "row row-fluid" }, [
+            _c("div", { staticClass: "form-group col-md-3" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search.column,
+                      expression: "search.column"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.search,
+                        "column",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.response.displayable, function(column) {
+                  return _c("option", { domProps: { value: column } }, [
+                    _vm._v(_vm._s(column))
+                  ])
+                })
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group col-md-3" }, [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search.operator,
+                      expression: "search.operator"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.search,
+                        "operator",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                [_c("option", { attrs: { value: "equals" } }, [_vm._v("=")])]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group col-md-6" }, [
+              _c("div", { staticClass: "input-group" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.search.value,
+                      expression: "search.value"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", id: "search" },
+                  domProps: { value: _vm.search.value },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.search, "value", $event.target.value)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm._m(0)
+              ])
+            ])
+          ])
+        ]
+      ),
+      _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "form-group col-md-10" }, [
           _c("label", { attrs: { for: "filter" } }, [
@@ -44335,7 +44491,20 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "input-group-btn" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-default", attrs: { type: "submit" } },
+        [_vm._v("Search")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

@@ -12,4 +12,9 @@ class PlanController extends DataTableController
 	{
 		return Plan::query();
 	}
+
+	public function getDisplayableColumns()
+	{
+		return ['id', 'braintree_id', 'price', 'active', 'created_at'];
+	}
 }
