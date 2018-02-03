@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class UserController extends DataTableController
 {
+	protected $allowCreation = false;
+
 	public function builder()
 	{
 		// I don't understand why we're using ::query()

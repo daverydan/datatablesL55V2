@@ -1,8 +1,29 @@
 <template>
   <div class="panel panel-default">
-      <div class="panel-heading">{{ response.table }}</div>
+      <div class="panel-heading">
+      	{{ response.table | capitalize }}
+      	<a href="#" class="pull-right" v-if="response.allow.creation" @click.prevent="creating.active = !creating.active">
+      		{{ creating.active ? 'Cancel' : '+ New Record' }}
+      	</a>
+      </div>
 
       <div class="panel-body">
+      	<div class="well" v-if="creating.active">
+      		<form action="#" class="form-horizontal" @click.prevent="store">
+      			<div class="form-group" v-for="column in response.updatable">
+      				<label class="col-md-3 control-label" :for="column">{{ column }}</label>
+      				<div class="col-md-6">
+      					<input type="text" :id="column" class="form-control" v-model="creating.form[column]">
+      				</div>
+      			</div>
+
+      			<div class="form-group">
+      				<div class="col-md-6 col-md-offset-3">
+      					<button type="submit" class="btn btn-default">Create</button>
+      				</div>
+      			</div>
+      		</form>
+      	</div>
 				<form action="#" @submit.prevent="getRecords">
 					<label for="saerch">Search</label>
 					<div class="row row-fluid">
@@ -112,7 +133,8 @@
     		return {
     			response: {
     				displayable: [],
-    				records: []
+    				records: [],
+    				allow: {}
     			},
     			sort: {
     				key: 'id', // column name default
@@ -129,6 +151,11 @@
     				value: '',
     				operator: 'equals',
     				column: 'id'
+    			},
+    			creating: {
+    				active: false,
+    				form: {},
+    				errors: []
     			}
     		}
     	},
@@ -209,7 +236,18 @@
       		}).catch((error) => {
 						this.editing.errors = error.response.data.errors
       		})
+      	},
+      	store () {
+      		console.log(this.creating.form)
       	}
+      },
+
+      filters: {
+        capitalize: function (value) {
+          if (!value) return ''
+          value = value.toString()
+          return value.charAt(0).toUpperCase() + value.slice(1)
+        }
       },
 
       mounted () {
