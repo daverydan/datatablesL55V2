@@ -5,6 +5,7 @@ namespace App\Http\Controllers\DataTable;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
@@ -63,6 +64,69 @@ abstract class DataTableController extends Controller
 
 	protected function getRecords(Request $request)
 	{
-		return $this->builder->limit($request->limit)->orderBy('id', 'asc')->get($this->getDisplayableColumns());
+		$builder = $this->builder;
+
+		if ($this->hasSearchQuery($request)) {
+			$builder = $this->buildSearch($builder, $request);
+		}
+
+		try {
+			return $this->builder->limit($request->limit)->orderBy('id', 'asc')->get($this->getDisplayableColumns());
+		} catch(QueryException $e) {
+			return [];
+		}
+	}
+
+	protected function hasSearchQuery(Request $request)
+	{
+		// array_filter = only get the elements that aren't NULL
+		// count(check if not NULL([check only these fields])) === 3
+		return count(array_filter($request->only(['column', 'operator', 'value']))) === 3;
+	}
+
+	protected function buildSearch(Builder $builder, Request $request)
+	{
+		$queryParts = $this->resolveQueryParts($request->operator, $request->value);
+		
+		return $builder->where($request->column, $queryParts['operator'], $queryParts['value']);
+	}
+
+	protected function resolveQueryParts($operator, $value)
+	{
+		// https://laravel.com/docs/5.5/helpers#method-array-get
+		return array_get([
+			'equals' => [
+				'operator' => '=',
+				'value' => $value
+			],
+			'contains' => [
+				'operator' => 'LIKE',
+				'value' => "%{$value}%"
+			],
+			'starts_with' => [
+				'operator' => 'LIKE',
+				'value' => "{$value}%"
+			],
+			'ends_with' => [
+				'operator' => 'LIKE',
+				'value' => "%{$value}"
+			],
+			'greater_than' => [
+				'operator' => '>',
+				'value' => $value
+			],
+			'less_than' => [
+				'operator' => '<',
+				'value' => $value
+			],
+			'greater_than_or_equal_to' => [
+				'operator' => '>=',
+				'value' => $value
+			],
+			'less_than_or_equal_to' => [
+				'operator' => '<=',
+				'value' => $value
+			]
+		], $operator);
 	}
 }

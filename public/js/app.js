@@ -43545,6 +43545,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -44121,7 +44127,7 @@ var render = function() {
         },
         [
           _c("label", { attrs: { for: "saerch" } }, [_vm._v("Search")]),
-          _vm._v("\n\t\t\t\t\t" + _vm._s(_vm.search) + "\n\t\t\t\t\t"),
+          _vm._v(" "),
           _c("div", { staticClass: "row row-fluid" }, [
             _c("div", { staticClass: "form-group col-md-3" }, [
               _c(
@@ -44197,7 +44203,39 @@ var render = function() {
                     }
                   }
                 },
-                [_c("option", { attrs: { value: "equals" } }, [_vm._v("=")])]
+                [
+                  _c("option", { attrs: { value: "equals" } }, [_vm._v("=")]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "greater_than" } }, [
+                    _vm._v(">")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "less_than" } }, [
+                    _vm._v("<")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "option",
+                    { attrs: { value: "greater_than_or_equal_to" } },
+                    [_vm._v("≥")]
+                  ),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "less_than_or_equal_to" } }, [
+                    _vm._v("≤")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "contains" } }, [
+                    _vm._v("contains")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "starts_with" } }, [
+                    _vm._v("starts with")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "ends_with" } }, [
+                    _vm._v("ends with")
+                  ])
+                ]
               )
             ]),
             _vm._v(" "),

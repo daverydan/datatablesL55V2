@@ -5,7 +5,6 @@
       <div class="panel-body">
 				<form action="#" @submit.prevent="getRecords">
 					<label for="saerch">Search</label>
-					{{ search }}
 					<div class="row row-fluid">
 						<div class="form-group col-md-3">
 							<select class="form-control" v-model="search.column">
@@ -15,6 +14,13 @@
 						<div class="form-group col-md-3">
 							<select class="form-control" v-model="search.operator">
 								<option value="equals">=</option>
+								<option value="greater_than">&gt;</option>
+								<option value="less_than">&lt;</option>
+								<option value="greater_than_or_equal_to">&ge;</option>
+								<option value="less_than_or_equal_to">&le;</option>
+								<option value="contains">contains</option>
+								<option value="starts_with">starts with</option>
+								<option value="ends_with">ends with</option>
 							</select>
 						</div>
 						<div class="form-group col-md-6">
@@ -172,6 +178,7 @@
       	getQueryParameters () {
 					return queryString.stringify({
 						limit: this.limit,
+						// https://babeljs.io/docs/plugins/transform-object-rest-spread/
 						...this.search
 					})
       	},
