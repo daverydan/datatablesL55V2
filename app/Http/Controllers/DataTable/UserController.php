@@ -32,4 +32,16 @@ class UserController extends DataTableController
 			'name', 'email', 'created_at'
 		];
 	}
+
+	// override update() in DataTableController abstract/parent class
+	public function update($id, Request $request)
+	{
+		$this->validate($request, [
+			'name' => 'required',
+			// unique: at users table in the email column
+			'email' => 'required|email|unique:users,email',
+		]);
+
+		$this->builder()->find($id)->update($request->only($this->getUpdatableColumns()));
+	}
 }

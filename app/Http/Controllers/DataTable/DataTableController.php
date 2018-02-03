@@ -39,6 +39,11 @@ abstract class DataTableController extends Controller
 		]);
 	}
 
+	public function update($id, Request $request)
+	{
+		$this->builder()->find($id)->update($request->only($this->getUpdatableColumns()));
+	}
+
 	public function getDisplayableColumns()
 	{
 		// remove hidden table columns from display
@@ -58,6 +63,6 @@ abstract class DataTableController extends Controller
 
 	protected function getRecords(Request $request)
 	{
-		return $this->builder->limit($request->limit)->get($this->getDisplayableColumns());
+		return $this->builder->limit($request->limit)->orderBy('id', 'asc')->get($this->getDisplayableColumns());
 	}
 }
