@@ -8,13 +8,25 @@ use Illuminate\Http\Request;
 
 class UserController extends DataTableController
 {
-	protected $allowCreation = false;
+	protected $allowCreation = true;
 
 	public function builder()
 	{
 		// I don't understand why we're using ::query()
 		// where does it come from
 		return User::query(); // returns a builder
+	}
+
+	/**
+	 * Get custom column names.
+	 * @return array
+	 */
+	public function getCustomColumnNames()
+	{
+		return [
+			'name' => 'Full name',
+			'email' => 'Email adress'
+		];
 	}
 
 	// override getDisplayableColumns() in DataTableController
@@ -31,7 +43,7 @@ class UserController extends DataTableController
 	{
 		// how does this override getDisplayableColumns()???
 		return [
-			'name', 'email', 'created_at'
+			'name', 'email'
 		];
 	}
 
