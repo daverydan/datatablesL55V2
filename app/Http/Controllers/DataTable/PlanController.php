@@ -13,8 +13,17 @@ class PlanController extends DataTableController
 		return Plan::query();
 	}
 
-	public function getDisplayableColumns()
+	public function store(Request $request)
 	{
-		return ['id', 'braintree_id', 'price', 'active', 'created_at'];
+		$this->validate($request, [
+			'braintree_id' => 'required',
+			'price' => 'required'
+		]);
+
+		if (!$this->allowCreation) {
+			return;
+		}
+
+		$this->builder->create($request->only($this->getUpdatableColumns()));
 	}
 }

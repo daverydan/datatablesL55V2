@@ -50,6 +50,20 @@ abstract class DataTableController extends Controller
 		$this->builder()->find($id)->update($request->only($this->getUpdatableColumns()));
 	}
 
+	/**
+	 * Create a record.
+	 * @param Request $request 
+	 * @return viod
+	 */
+	public function store(Request $request)
+	{
+		if (!$this->allowCreation) {
+			return;
+		}
+
+		$this->builder->create($request->only($this->getUpdatableColumns()));
+	}
+
 	public function getDisplayableColumns()
 	{
 		// remove hidden table columns from display
