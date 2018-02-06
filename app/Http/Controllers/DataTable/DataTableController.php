@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Schema;
 abstract class DataTableController extends Controller
 {
 	protected $allowCreation = true;
+	
+	protected $allowDeletion = true;
 
 	protected $builder;
 
@@ -63,6 +65,16 @@ abstract class DataTableController extends Controller
 		}
 
 		$this->builder->create($request->only($this->getUpdatableColumns()));
+	}
+
+	public function destroy($ids, Request $request)
+	{
+		if (!$this->allowDeletion) {
+			return;
+		}
+
+		// WHERE IN (1, 2, 3)
+		$this->builder()->whereIn('id', explode(',', $ids))->delete();
 	}
 
 	public function getDisplayableColumns()

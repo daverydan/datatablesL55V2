@@ -29,25 +29,20 @@ class UserController extends DataTableController
 		];
 	}
 
-	// override getDisplayableColumns() in DataTableController
 	public function getDisplayableColumns()
 	{
-		// how does this override getDisplayableColumns()???
 		return [
 			'id', 'name', 'email', 'created_at'
 		];
 	}
 
-	// override getUpdatableColumns() in DataTableController
 	public function getUpdatableColumns()
 	{
-		// how does this override getDisplayableColumns()???
 		return [
 			'name', 'email'
 		];
 	}
 
-	// override update() in DataTableController abstract/parent class
 	public function update($id, Request $request)
 	{
 		$this->validate($request, [

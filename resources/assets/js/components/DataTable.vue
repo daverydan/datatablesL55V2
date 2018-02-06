@@ -1,131 +1,156 @@
 <template>
-  <div class="panel panel-default">
-      <div class="panel-heading">
-      	{{ response.table | capitalize }}
-      	<a href="#" class="pull-right" v-if="response.allow.creation" @click.prevent="creating.active = !creating.active">
-      		{{ creating.active ? 'Cancel' : '+ New Record' }}
-      	</a>
-      </div>
-
-      <div class="panel-body">
-      	<div class="well" v-if="creating.active">
-      		<form action="#" class="form-horizontal" @submit.prevent="store">
-      			<div class="form-group" v-for="column in response.updatable" :class="{ 'has-error': creating.errors[column] }">
-      				<label class="col-md-3 control-label" :for="column">{{ response.custom_column_names[column] || column }}</label>
-      				<div class="col-md-6">
-      					<input type="text" :id="column" class="form-control" v-model="creating.form[column]">
-      					<span class="help-block" v-if="creating.errors[column]">
-      						<strong>{{ creating.errors[column][0] }}</strong>
-      					</span>
-      					<!-- v-if="column !== 'id' && column !== 'created_at' && column !== 'updated_at'" -->
-      					<!-- <input v-else class="form-control" disabled> -->
-      				</div>
-      			</div>
-
-      			<div class="form-group">
-      				<div class="col-md-6 col-md-offset-3">
-      					<button type="submit" class="btn btn-default">Create</button>
-      				</div>
-      			</div>
-      		</form>
-      	</div>
-				<form action="#" @submit.prevent="getRecords">
-					<label for="saerch">Search</label>
-					<div class="row row-fluid">
-						<div class="form-group col-md-3">
-							<select class="form-control" v-model="search.column">
-								<option :value="column" v-for="column in response.displayable">{{ column }}</option>
-							</select>
-						</div>
-						<div class="form-group col-md-3">
-							<select class="form-control" v-model="search.operator">
-								<option value="equals">=</option>
-								<option value="greater_than">&gt;</option>
-								<option value="less_than">&lt;</option>
-								<option value="greater_than_or_equal_to">&ge;</option>
-								<option value="less_than_or_equal_to">&le;</option>
-								<option value="contains">contains</option>
-								<option value="starts_with">starts with</option>
-								<option value="ends_with">ends with</option>
-							</select>
-						</div>
-						<div class="form-group col-md-6">
-							<div class="input-group">
-								<input type="text" class="form-control" id="search" v-model="search.value">
-								<span class="input-group-btn">
-									<button class="btn btn-default" type="submit">Search</button>
-								</span>
+	<div>
+		<div class="panel panel-default">
+		    <div class="panel-heading">
+		    	{{ response.table | capitalize }}
+		    	<a href="#" class="pull-right" v-if="response.allow.creation" @click.prevent="creating.active = !creating.active">
+		    		{{ creating.active ? 'Cancel' : '+ New Record' }}
+		    	</a>
+		    </div>
+		
+		    <div class="panel-body">
+		    	<div class="well" v-if="creating.active">
+		    		<form action="#" class="form-horizontal" @submit.prevent="store">
+		    			<div class="form-group" v-for="column in response.updatable" :class="{ 'has-error': creating.errors[column] }">
+		    				<label class="col-md-3 control-label" :for="column">{{ response.custom_column_names[column] || column }}</label>
+		    				<div class="col-md-6">
+		    					<input type="text" :id="column" class="form-control" v-model="creating.form[column]">
+		    					<span class="help-block" v-if="creating.errors[column]">
+		    						<strong>{{ creating.errors[column][0] }}</strong>
+		    					</span>
+		    					<!-- v-if="column !== 'id' && column !== 'created_at' && column !== 'updated_at'" -->
+		    					<!-- <input v-else class="form-control" disabled> -->
+		    				</div>
+		    			</div>
+		
+		    			<div class="form-group">
+		    				<div class="col-md-6 col-md-offset-3">
+		    					<button type="submit" class="btn btn-default">Create</button>
+		    				</div>
+		    			</div>
+		    		</form>
+		    	</div>
+						<form action="#" @submit.prevent="getRecords">
+							<label for="saerch">Search</label>
+							<div class="row row-fluid">
+								<div class="form-group col-md-3">
+									<select class="form-control" v-model="search.column">
+										<option :value="column" v-for="column in response.displayable">{{ column }}</option>
+									</select>
+								</div>
+								<div class="form-group col-md-3">
+									<select class="form-control" v-model="search.operator">
+										<option value="equals">=</option>
+										<option value="greater_than">&gt;</option>
+										<option value="less_than">&lt;</option>
+										<option value="greater_than_or_equal_to">&ge;</option>
+										<option value="less_than_or_equal_to">&le;</option>
+										<option value="contains">contains</option>
+										<option value="starts_with">starts with</option>
+										<option value="ends_with">ends with</option>
+									</select>
+								</div>
+								<div class="form-group col-md-6">
+									<div class="input-group">
+										<input type="text" class="form-control" id="search" v-model="search.value">
+										<span class="input-group-btn">
+											<button class="btn btn-default" type="submit">Search</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</form>
+		
+						<div class="row">
+							<div class="form-group col-md-10">
+								<label for="filter">Quick search current results</label>
+								<input type="text" id="filter" class="form-control" v-model="quickSearchQuery">
+							</div>
+		
+							<div class="form-group col-md-2">
+								<label for="limit">Display records</label>
+								<select id="limit" class="form-control" v-model="limit" @change="getRecords">
+									<option value="50">50</option>
+									<option value="100">100</option>
+									<option value="1000">1000</option>
+									<option value="">All</option>
+								</select>
 							</div>
 						</div>
-					</div>
-				</form>
+		    </div>
+		</div>
 
-				<div class="row">
-					<div class="form-group col-md-10">
-						<label for="filter">Quick search current results</label>
-						<input type="text" id="filter" class="form-control" v-model="quickSearchQuery">
-					</div>
-
-					<div class="form-group col-md-2">
-						<label for="limit">Display records</label>
-						<select id="limit" class="form-control" v-model="limit" @change="getRecords">
-							<option value="50">50</option>
-							<option value="100">100</option>
-							<option value="1000">1000</option>
-							<option value="">All</option>
-						</select>
-					</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" v-if="selected.length">
+				<div class="btn-group">
+					<a href="#" data-toggle="dropdown">With selected <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#" @click.prevent="destroy(selected)">Delete</a>
+						</li>
+					</ul>
 				</div>
+			</div>
 
-      	<!-- {{ response.records }} -->
-        <div class="table-responsive">
-        	<table class="table table-striped">
-        		<thead>
-        			<tr>
-        				<th v-for="column in response.displayable">
-        					<span class="sortable" @click="sortBy(column)">{{ response.custom_column_names[column] || column }}</span>
-        					<div 
-        						class="arrow"
-        						v-if="sort.key ===column"
-        						:class="{ 'arrow--asc': sort.order === 'asc', 'arrow--desc': sort.order === 'desc' }"
-      						></div>
-        				</th>
-        				<th>&nbsp;</th>
-        			</tr>
-        		</thead>
-        	
-        		<tbody>
-        			<!-- {{ editing.form }} -->
-        			<!-- <tr v-for="record in response.records"> -->
-        			<tr v-for="record in filteredRecords">
-<!-- column = property : columnValue = value (property: value / column: value) -->
-        				<td v-for="columnValue, column in record">
-        					<template v-if="editing.id === record.id && isUpdatable(column)">
-														        						<!-- bind class if editing.errors[column] -->
-        						<div class="form-group" :class="{ 'has-error': editing.errors[column] }">
-        							<input type="text" class="form-control" value="columnValue" v-model="editing.form[column]">
-        							<div class="help-block" v-if="editing.errors[column]">
-        								<strong>{{ editing.errors[column][0] }}</strong>
-        							</div>
-        						</div>
-        					</template>
-        					<template v-else>
-        						{{ columnValue }}
-        					</template>
-        				</td>
-        				<td>
-        					<a href="#" @click.prevent="edit(record)" v-if="editing.id !== record.id">Edit</a>
-        					<template v-if="editing.id === record.id">
-        						<a href="#" @click.prevent="update">Save</a> <br>
-        						<a href="#" @click.prevent="editing.id = null">Cancel</a>
-        					</template>
-        				</td>
-        			</tr>
-        		</tbody>
-        	</table>
-        </div>
-      </div>
-  </div>
+			<div class="panel-body">
+				<div class="table-responsive" v-if="filteredRecords.length">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th v-if="canSelectItems">
+									<input type="checkbox" @change="toggleSelectAll" :checked="filteredRecords.length === selected.length">
+								</th>
+								<th v-for="column in response.displayable">
+									<span class="sortable" @click="sortBy(column)">{{ response.custom_column_names[column] || column }}</span>
+									<div 
+									class="arrow"
+									v-if="sort.key ===column"
+									:class="{ 'arrow--asc': sort.order === 'asc', 'arrow--desc': sort.order === 'desc' }"
+									></div>
+								</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						
+						<tbody>
+								<tr v-for="record in filteredRecords">
+									<td v-if="canSelectItems">
+										<input type="checkbox" v-model="selected" :value="record.id">
+									</td>
+									<!-- column = property : columnValue = value (property: value / column: value) -->
+									<td v-for="columnValue, column in record">
+										<template v-if="editing.id === record.id && isUpdatable(column)">
+											<!-- bind class if editing.errors[column] -->
+											<div class="form-group" :class="{ 'has-error': editing.errors[column] }">
+												<input type="text" class="form-control" value="columnValue" v-model="editing.form[column]">
+												<div class="help-block" v-if="editing.errors[column]">
+													<strong>{{ editing.errors[column][0] }}</strong>
+												</div>
+											</div>
+										</template>
+										<template v-else>
+											{{ columnValue }}
+										</template>
+									</td>
+									<td>
+										<a href="#" @click.prevent="edit(record)" v-if="editing.id !== record.id">Edit</a>
+										<template v-if="editing.id === record.id">
+											<a href="#" @click.prevent="update">Save</a> <br>
+											<a href="#" @click.prevent="editing.id = null">Cancel</a>
+										</template>
+									</td>
+									<td>
+										<a href="#" @click.prevent="destroy(record.id)">Delete</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<p v-else>No results</p>
+				</div>
+			</div>
+	</div>
 </template>
 
 <script>
@@ -161,7 +186,8 @@
     				active: false,
     				form: {},
     				errors: []
-    			}
+    			},
+    			selected: [],
     		}
     	},
       
@@ -195,6 +221,9 @@
 					}
 
 					return data
+				},
+				canSelectItems () {
+					return this.filteredRecords.length <= 500
 				}
 			},
       
@@ -256,6 +285,29 @@
 							this.creating.errors = error.response.data.errors
 						}
     			})
+      	},
+      	toggleSelectAll () {
+      		if (this.selected.length > 0) {
+      			this.selected = []
+      			return
+      		}
+
+      		// _.map = lodash method that'll extract out the id foreach of the filteredRecords
+      		this.selected = _.map(this.filteredRecords, 'id')
+      	},
+      	destroy (record) {
+      		if (!window.confirm(`Are you sure you want to delete this?`)) {
+            return
+	        }
+
+					axios.delete(`${this.endpoint}/${record}`).then(() => {
+						this.selected = []
+						this.getRecords()
+
+						if (this.selected.length) {
+						    this.toggleSelectAll()
+						}
+					})
       	}
       },
 

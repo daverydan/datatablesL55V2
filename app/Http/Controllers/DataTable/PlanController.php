@@ -13,10 +13,8 @@ class PlanController extends DataTableController
 		return Plan::query();
 	}
 
-	// override getUpdatableColumns() in DataTableController
 	public function getUpdatableColumns()
 	{
-		// how does this override getDisplayableColumns()???
 		return [
 			'braintree_id', 'price', 'active'
 		];
